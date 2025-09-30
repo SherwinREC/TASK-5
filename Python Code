@@ -1,0 +1,53 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import kagglehub
+
+path = kagglehub.dataset_download("shuofxz/titanic-machine-learning-from-disaster")
+train = pd.read_csv(f"{path}/train.csv")
+test = pd.read_csv(f"{path}/test.csv")
+
+print(train.shape)
+print(test.shape)
+print(train.info())
+print(train.describe())
+print(train.isnull().sum())
+print(train['Survived'].value_counts())
+
+sns.histplot(train['Age'].dropna(), bins=30, kde=True)
+plt.show()
+
+sns.countplot(x='Survived', data=train)
+plt.show()
+
+sns.countplot(x='Pclass', data=train)
+plt.show()
+
+sns.boxplot(x="Pclass", y="Age", data=train)
+plt.show()
+
+sns.countplot(x="Sex", hue="Survived", data=train)
+plt.show()
+
+sns.countplot(x="Pclass", hue="Survived", data=train)
+plt.show()
+
+sns.scatterplot(x="Age", y="Fare", hue="Survived", data=train)
+plt.show()
+
+sns.heatmap(train.corr(numeric_only=True), annot=True, cmap="coolwarm")
+plt.show()
+
+sns.pairplot(train[["Survived","Age","Fare","Pclass"]], hue="Survived")
+plt.show()
+
+train['Age'].fillna(train['Age'].median(), inplace=True)
+train['Embarked'].fillna(train['Embarked'].mode()[0], inplace=True)
+
+print("""
+1. Females had much higher survival rates than males.
+2. First-class passengers survived more compared to third-class.
+3. Younger passengers and children had higher survival chances.
+4. Fare and survival were positively correlated.
+5. Missing values existed mainly in Age, Cabin, and Embarked.
+""")
